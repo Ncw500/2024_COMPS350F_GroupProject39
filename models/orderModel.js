@@ -7,10 +7,10 @@ class OrderModel {
 
         this.orderSchema = new mongoose.Schema({
             userID: { type: String, required: true },
-            restaurantID: { type: mongoose.Schema.Types.ObjectId, required: true },
+            restaurantID: { type: mongoose.Schema.ObjectId, required: true },
             menuItem: [{
                 type: {
-                    itemID: { type: mongoose.Schema.Types.ObjectId, required: true },
+                    _id: { type: mongoose.Schema.ObjectId, required: true },
                     itemName: { type: String },
                     itemPrice: { type: Number }
                 },
@@ -30,6 +30,7 @@ class OrderModel {
              },
             deliveryMethod: { type: String, required: true },
             paymentMethod: { type: String, required: true },
+            totalAmount: { type: Number, required: true },
             createAt: { type: Date, default: Date.now }
         });
 
@@ -55,6 +56,14 @@ class OrderModel {
 
     async findOrderByUserID(userID, sortObject = {}) {
         let result = await this.db.findMany(this.Order, { userID: userID }, {}, sortObject).catch(err => {
+            throw err;
+        });
+        return result;
+    }
+
+    async findOrderByUserIDAndOrderStatus(queryObject, sortObject = {}) {
+
+        let result = await this.db.findMany(this.Order, { userID: queryObject.userID, orderStatus: queryObject.orderStatus }, {}, sortObject).catch(err => {
             throw err;
         });
         return result;

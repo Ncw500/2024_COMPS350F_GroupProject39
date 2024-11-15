@@ -69,7 +69,6 @@ class RestaurantModel { // 定義一個名為 UserModel 的類別
         let result = await this.db.findOne(this.Restaurant, { restaurantName: restaurantName }).catch(err => {
             throw err;
         });
-        console.log(result);
         return result;
     }
 

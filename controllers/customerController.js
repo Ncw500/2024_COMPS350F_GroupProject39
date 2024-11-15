@@ -1,7 +1,7 @@
 
 const RestaurantModel = require('../models/restaurantModel');
 const OrderModel = require('../models/orderModel');
-const e = require('express');
+const AccountBalanceModel = require('../models/accountBalanceModel');
 
 class AdminController {
     async renderWithDefaults(req, res, view, options = {}) {
@@ -17,13 +17,11 @@ class AdminController {
             orders: [],
             accountBalance: 0,
         };
-        
+
         const renderOptions = { ...defaults, ...options };
         res.render(view, renderOptions);
     }
 
-
-    // 渲染頁面
     async renderMenuPage(req, res, options = {}) {
         const restaurantModel = new RestaurantModel();
         let restaurantsList = undefined;
@@ -82,8 +80,20 @@ class AdminController {
         }
     }
 
+    async getItemPriceByID(itemID) {
+        const restaurantModel = new RestaurantModel();
+        let restaurantList = await restaurantModel.findAllRestaurant();
+        for (const restaurant of restaurantList) {
+            const foundItem = restaurant.menuItems.find(item => item._id.equals(itemID)); // 使用 equals 方法比较 ObjectId
+            if (foundItem) {
+                return foundItem.itemPrice; // 返回找到的 item's price
+            }
+        }
+        return null; // 如果没有找到返回 null
+    }
+
     async renderPaymentPage(req, res, options = {}) {
-        let { 
+        let {
             room,
             floor,
             building,
@@ -103,25 +113,14 @@ class AdminController {
             deliveryMethod,
         };
 
-        let accountBalance = 0;
 
-        await this.renderWithDefaults(req, res, 'paymentPage', {accountBalance: accountBalance, ...options});
+        const accountBalanceModel = new AccountBalanceModel();
+        let accountBalance = await accountBalanceModel.getAccountBalance(req.session.user.userID);
+
+        await this.renderWithDefaults(req, res, 'paymentPage', { accountBalance: accountBalance, ...options });
     }
 
-    async getItemPriceByID(itemID) {
-        const restaurantModel = new RestaurantModel();
-        let restaurantList = await restaurantModel.findAllRestaurant();
-        for (const restaurant of restaurantList) {
-            const foundItem = restaurant.menuItems.find(item => item.itemID.equals(itemID)); // 使用 equals 方法比较 ObjectId
-            if (foundItem) {
-                return foundItem.itemPrice; // 返回找到的 item's price
-            }
-        }
-        return null; // 如果没有找到返回 null
-    }
-
-
-    async checkout(req, res) {
+    async payment(req, res) {
         let cart = req.session.cart;
         let itemTotalPrice = 0;
 
@@ -131,28 +130,83 @@ class AdminController {
             itemTotalPrice += itemPrice * item.itemQuantity;
         }
 
-        // payment gateway
-        // send payment info to payment gateway
-        // get payment result
-        // if payment success, create order on mongodb
+        let paymentMethod = req.body.paymentMethod;
+        let paymentResult = false;
+        if (paymentMethod === 'balance') {
+            const accountBalanceModel = new AccountBalanceModel();
+            let accountBalance = await accountBalanceModel.getAccountBalance(req.session.user.userID);
+            if (accountBalance.balance < itemTotalPrice) {
+                await this.renderPaymentPage(req, res, { error: 'Insufficient account balance' });
+                return;
+            } else {
+                await accountBalanceModel.updateAccountBalance(req.session.user.userID, accountBalance.balance - itemTotalPrice);
+                paymentResult = true;
+            }
+        } else if (paymentMethod === 'creditCard') {
+            //
+        } else if (paymentMethod === 'debitCard') {
+            // 
+        } else if (paymentMethod === 'paypal') {
+            //
+        }
+        if (paymentResult === true) {
+            // create order on mongodb
+            const orderModel = new OrderModel();
+            const order = {
+                userID: req.session.user.userID,
+                restaurantID: cart[0].restaurantID,
+                menuItem: {
+                    _id: cart[0].itemID,
+                    itemName: cart[0].itemName,
+                    itemPrice: cart[0].itemPrice,
+                },
+                orderStatus: 'Pending',
+                deliveryAddress: {
+                    room: req.session.checkoutInfo.room,
+                    floor: req.session.checkoutInfo.floor,
+                    building: req.session.checkoutInfo.building,
+                    street: req.session.checkoutInfo.street,
+                    town: req.session.checkoutInfo.town,
+                    region: req.session.checkoutInfo.region,
+                },
+                deliveryMethod: req.session.checkoutInfo.deliveryMethod,
+                paymentMethod: paymentMethod,
+                totalAmount: itemTotalPrice,
+            };
 
+            req.session.cart = [];
 
-        // create order on mongodb
+            try {
+                await orderModel.createOrder(order); // 尝试创建订单
+                await this.renderCartPage(req, res, { success: `Order created, total price: ${itemTotalPrice}` });
+            } catch (err) {
+                await this.renderCartPage(req, res, { error: 'An error occurred while creating order' });
+                return; // 退出，防止继续执行
+            }
+        } else {
+            await this.renderPaymentPage(req, res, { error: 'An error occurred while processing payment' });
+        }
+
+    }
+
+    async renderOrderConfirmationPage(req, res, options = {}) {
         const orderModel = new OrderModel();
-        const order = {
+        let orders = undefined;
+        let error = undefined;
+
+        let queryObject = {
             userID: req.session.user.userID,
-            restaurantID: cart[0].restaurantID,
-            menuItem: cart,
-            orderStatus: 'Pending'
+            orderStatus: 'Pending',
         };
 
-        req.session.cart = [];
+        try {
+            orders = await orderModel.findOrderByUserIDAndOrderStatus(queryObject, { createAt: -1 });
+        } catch (err) {
+            error = 'An error occurred while fetching order data';
+        }
+        const renderOptions = { orders, error, ...options };
 
-        let result = await orderModel.createOrder(order).catch(async err => {
-            await this.renderCartPage(req, res, { error: 'An error occurred while creating order' });
-        });
-
-        await this.renderCartPage(req, res, { success: `Order created, total price: ${itemTotalPrice}` });
+        await this.renderWithDefaults(req, res, 'orderConfirmationPage', renderOptions);
     }
 
     async removeFromCart(req, res) {
@@ -165,10 +219,6 @@ class AdminController {
         } else {
             await this.renderCartPage(req, res, { error: 'Invalid request!' });
         }
-    }
-
-    async renderPaymentPage(req, res, options = {}) {
-        await this.renderWithDefaults(req, res, 'paymentPage', options);
     }
 
     async renderOrderHistoryPage(req, res, options = {}) {

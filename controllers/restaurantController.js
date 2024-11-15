@@ -35,7 +35,6 @@ class RestaurantController {
             const result = await restaurantModel.insertRestaurant(restaurantName, null, { city: restaurantCity, street: restaurantStreet }, { ownerUserID: req.session.user.userID, ownerEmail: req.session.user.userEmail });
             await this.renderWithDefaults(req, res, 'registerRestaurant', { success: "success to register" });
         } catch (err) {
-            console.log(err);
             await this.renderWithDefaults(req, res, 'registerRestaurant', { error: 'An error occurred!' });
         }
     }

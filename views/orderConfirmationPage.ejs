@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Order</title>
+    <title>Order Confirm Page</title>
     <style>
         table {
             width: 100%;
@@ -21,7 +21,7 @@
     </style>
 </head>
 <body>
-    <a href="/.."><h1>COMP S350F - Group Project 39 - Order History Page</h1></a>
+    <a href="/"><h1>COMP S350F - Group Project 39 - Order Confirm Page</h1></a>
     <% if (error) { %>
         <p style="color: red;" class="error-message">
             <%= error %>
@@ -31,13 +31,13 @@
             <%= success %>
         </p>
     <% } %>
-    <h2>Your order history:</h2>
+    <h2>Your Processing Order:</h2>
     <table>
         <thead>
             <tr>
                 <th>Order ID</th>
                 <th>Order Status</th>
-                <th>Create At</th>
+                <th>Total Amount</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -47,7 +47,7 @@
                     <tr>
                         <td><%= order._id %></td>
                         <td><%= order.orderStatus %></td>
-                        <td><%= order.createAt %></td> 
+                        <td><%= order.totalAmount %></td> 
                         <td>
                             <form action="/customer/viewOrderDetail" method="post">
                                 <input type="hidden" name="orderID" value="<%= order.orderID %>">
@@ -58,9 +58,10 @@
                 <% }) %>
             <% } else { %>
                 <tr>
-                    <td colspan="4">No order processing.</td>
+                    <td colspan="4">No order history.</td>
                 </tr>
             <% } %>
         </tbody>
 </body>
+
 </html>

@@ -53,7 +53,7 @@
     <% } %>
 
     <h2>Payment Information:</h2>
-    <form action="/payment" method="POST">
+    <form action="/customer/payment" method="POST">
         <label for="paymentMethod">Payment Method:</label>
         <select id="paymentMethod" name="paymentMethod" required onchange="togglePaymentDetails()"> 
             <option value="balance">Account Balance</option>
@@ -63,25 +63,25 @@
         </select><br/>
 
         <div id="accountBalance">
-            Account Balance: $100 <!-- 示例账户余额信息 -->
+            Account Balance: $<%= accountBalance.balance %> <!-- 示例账户余额信息 -->
         </div>
 
         <div id="cardDetails" class="hidden"> <!-- 信用卡输入区域 -->
             <label for="cardNumber">Card Number:</label>
-            <input type="text" id="cardNumber" name="cardNumber" required>
+            <input type="text" id="cardNumber" name="cardNumber" required disabled>
             <br>
             <label for="cardHolder">Card Holder:</label>
-            <input type="text" id="cardHolder" name="cardHolder" required>
+            <input type="text" id="cardHolder" name="cardHolder" required disabled>
             <br>
             <label for="expiryDate">Expiry Date:</label>
-            <input type="text" id="expiryDate" name="expiryDate" required placeholder="MM/YY">
+            <input type="text" id="expiryDate" name="expiryDate" required placeholder="MM/YY" disabled>
             <br>
             <label for="cvv">CVV:</label>
-            <input type="text" id="cvv" name="cvv" required>
+            <input type="text" id="cvv" name="cvv" required disabled>
             <br>
         </div>
 
-        <button type="submit">Pay</button>
+        <button type="submit">Payment</button>
     </form>
 </body>
 

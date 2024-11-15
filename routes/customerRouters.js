@@ -13,7 +13,11 @@ router.post('/checkoutPage', (req, res) => customerController.renderCheckoutPage
 
 router.post('/removeFromCart', (req, res) => customerController.removeFromCart(req, res));
 
-router.get('/paymentPage', (req, res) => customerController.renderPaymentPage(req, res));
+router.post('/paymentPage', (req, res) => customerController.renderPaymentPage(req, res));
+
+router.post('/payment', (req, res) => customerController.payment(req, res));
+
+router.get('/orderConfirmationPage', (req, res) => customerController.renderOrderConfirmationPage(req, res));
 
 router.get('/orderHistoryPage', (req, res) => customerController.renderOrderHistoryPage(req, res));
 

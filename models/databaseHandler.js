@@ -29,10 +29,10 @@ class DatabaseHandler {
     }
 
     // 查找数据
-    async findOne(mongooseModel, queryObject) {
+    async findOne(mongooseModel, queryObject, projection = {}, sortObject = {}) {
         try {
             await this.connect();
-            const result = await mongooseModel.findOne(queryObject);
+            const result = await mongooseModel.findOne(queryObject, projection).sort(sortObject);
             // console.log(debugLogheader("Databasehandler.findOne()") + 'Data found:', result);
             return result;
         } catch (err) {
@@ -95,7 +95,7 @@ class DatabaseHandler {
             let result = null;
             if (updateMode === "push") {
                 result = await mongooseModel.updateOne(queryObject, { $push: updateData });
-            } else if (updateData === "set") {
+            } else if (updateMode === "set") {
                 result = await mongooseModel.updateOne(queryObject, { $set: updateData });
             }
             return result;

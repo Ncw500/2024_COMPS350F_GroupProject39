@@ -16,6 +16,7 @@
         <% if (user.userRole === 'customer') { %>
             <button onclick="window.location.href='/customer/menuPage'">Menu Page</button>
             <button onclick="window.location.href='/customer/cartPage'">Cart Page</button>
+            <button onclick="window.location.href='/customer/orderConfirmationPage'">Order Confirm Page</button>
             <button onclick="window.location.href='/customer/orderHistoryPage'">Order History Page</button>
         <% } else if (user.userRole === 'restaurant') { %>
             <button onclick="window.location.href='/restaurant/registerRestaurant'">Register Restaurant</button>

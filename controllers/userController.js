@@ -1,4 +1,5 @@
 const UserModel = require('../models/userModel');
+const AccountBalanceModel = require('../models/accountBalanceModel');
 
 class UserController {
 
@@ -52,10 +53,12 @@ class UserController {
     async signup(req, res) {
         const { userID, userPassword, userEmail, userRole } = req.body;
         const userModel = new UserModel();
+        const accountBalanceModel = new AccountBalanceModel();
 
         try {
             const result = await userModel.insertUser(userID, userPassword, userEmail, userRole);
             // create account balance for user
+            const result2 = await accountBalanceModel.insertAccountBalance(userID);
             
             this.renderWithDefaults(res, 'loginPage', { success: 'User account created successfully!' });
         } catch (err) {

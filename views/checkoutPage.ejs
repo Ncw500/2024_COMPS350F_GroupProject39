@@ -63,15 +63,15 @@
         </tbody>
     </table><br/>
     Your shipping address: <br/><br/>
-    <form action="/customer/paymentPage" method="get">
+    <form action="/customer/paymentPage" method="post">
         <label for="room">Room:</label><br/>
         <input type="text" name="room" id="room" required><br/><br/>
         <label for="floor">Floor:</label><br/>
         <input type="text" name="floor" id="floor" required><br/><br/>
         <label for="building">Building:</label><br/>
         <input type="text" name="building" id="building" required><br/><br/>
-        <label for="state">State:</label><br/>
-        <input type="text" name="state" id="state" required><br/><br/>
+        <label for="street">Street:</label><br/>
+        <input type="text" name="street" id="state" required><br/><br/>
         <label for="town">Town:</label><br/>
         <input type="text" name="town" id="town" required><br/><br/>
         <label for="region">Region:</label><br/>
@@ -85,7 +85,7 @@
             <option value="Pickup">Pickup</option>
             <option value="Delivery">Delivery</option>
         </select><br/><br/>
-        <button type="submit">Payment</button>
+        <button type="submit">Go to Payment Page</button>
     </form>
     
 </body>
