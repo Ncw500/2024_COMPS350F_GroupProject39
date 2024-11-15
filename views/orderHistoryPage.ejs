@@ -31,7 +31,7 @@
             <%= success %>
         </p>
     <% } %>
-    <h2>Your order history:</h2>
+    <h2>Your order history:</h2>    
     <table>
         <thead>
             <tr>
@@ -49,8 +49,8 @@
                         <td><%= order.orderStatus %></td>
                         <td><%= order.createAt %></td> 
                         <td>
-                            <form action="/customer/viewOrderDetail" method="post">
-                                <input type="hidden" name="orderID" value="<%= order.orderID %>">
+                            <form action="/customer/itemDetailsPage" method="post">
+                                <input type="hidden" name="orderID" value="<%= order._id %>">
                                 <button type="submit">View Detail</button>
                             </form>
                         </td>

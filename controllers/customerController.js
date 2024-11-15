@@ -7,6 +7,7 @@ class AdminController {
     async renderWithDefaults(req, res, view, options = {}) {
         let user = req.session.user;
 
+
         const defaults = {
             error: '',
             success: '',
@@ -16,6 +17,7 @@ class AdminController {
             itemTotalPrice: 0,
             orders: [],
             accountBalance: 0,
+            menuItemList: [],
         };
 
         const renderOptions = { ...defaults, ...options };
@@ -155,11 +157,7 @@ class AdminController {
             const order = {
                 userID: req.session.user.userID,
                 restaurantID: cart[0].restaurantID,
-                menuItem: {
-                    _id: cart[0].itemID,
-                    itemName: cart[0].itemName,
-                    itemPrice: cart[0].itemPrice,
-                },
+                menuItems: [],
                 orderStatus: 'Pending',
                 deliveryAddress: {
                     room: req.session.checkoutInfo.room,
@@ -173,6 +171,16 @@ class AdminController {
                 paymentMethod: paymentMethod,
                 totalAmount: itemTotalPrice,
             };
+
+            for (const item of cart) {
+                let itemPrice = await this.getItemPriceByID(item.itemID);
+                order.menuItems.push({
+                    _id: item.itemID,
+                    itemName: item.itemName,
+                    itemPrice: itemPrice,
+                    itemQuantity: item.itemQuantity,
+                });
+            }
 
             req.session.cart = [];
 
@@ -201,9 +209,13 @@ class AdminController {
 
         try {
             orders = await orderModel.findOrderByUserIDAndOrderStatus(queryObject, { createAt: -1 });
+            req.session.orders = orders;
         } catch (err) {
             error = 'An error occurred while fetching order data';
         }
+
+        req.session.previousUrl = req.url;
+
         const renderOptions = { orders, error, ...options };
 
         await this.renderWithDefaults(req, res, 'orderConfirmationPage', renderOptions);
@@ -221,6 +233,33 @@ class AdminController {
         }
     }
 
+    async renderItemDetailsPage(req, res, options = {}) {
+        // 假设这个字符串是从 req.body.order 中获得的
+        let orderID = req.body.orderID;
+        let menuItemList = [];
+        let order = req.session.orders.find(order => order._id === orderID);
+
+        const restaurantModel = new RestaurantModel();
+        for (const item of order.menuItems) {
+            let restaurant = await restaurantModel.findMenuItemByRestaurantIDAndItemID(order.restaurantID, item._id);
+            let menuItem = restaurant.menuItems.filter(menuItem => menuItem.id === item._id);
+            if (menuItem.length > 0) {
+                let itemQuantity = item.itemQuantity;
+                menuItem[0].itemQuantity = itemQuantity;
+                menuItemList.push(menuItem[0]);
+            }
+
+        }
+
+        let item = undefined;
+        let error = undefined;
+
+
+        const renderOptions = { menuItemList, error, ...options };
+        await this.renderWithDefaults(req, res, 'itemDetailsPage', renderOptions);
+    }
+
+
     async renderOrderHistoryPage(req, res, options = {}) {
         const orderModel = new OrderModel();
         let orders = undefined;
@@ -234,6 +273,7 @@ class AdminController {
         const renderOptions = { orders, error, ...options };
         await this.renderWithDefaults(req, res, 'orderHistoryPage', renderOptions);
     }
+
 
 }
 

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details Page</title>
+    <style>
+        table {
+            width: 100%;
+            margin: 0 auto; /* 表格居中 */
+            text-align: center; 
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px; /* 增加表格内边距，增强可读性 */
+            border: 1px solid #ddd; /* 表格边框样式 */
+        }
+        form {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <a href="/"><h1>COMP S350F - Group Project 39 - Item Detail Page</h1></a>
+    <% if (error) { %>
+        <p style="color: red;" class="error-message">
+            <%= error %>
+        </p>
+    <% } else if (success) { %>
+        <p style="color: green;" class="success-message">
+            <%= success %>
+        </p>
+    <% } %>
+
+    <% if (menuItemList) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Menu Name</th>
+                    <th>Menu Price</th>
+                    <th>Menu Description</th>
+                    <th>Menu Category</th>
+                    <th>Menu Image</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i = 0; i < menuItemList.length; i++) { %>
+                    <tr>
+                        <td><%= menuItemList[i].itemName %></td>
+                        <td><%= menuItemList[i].itemPrice %></td>
+                        <td><%= menuItemList[i].itemDescription %></td>
+                        <td><%= menuItemList[i].itemCategory %></td>
+                        <td><img src="../<%= menuItemList[i].itemPicture.path %>" alt="menu image" width="100" height="100"></td>
+                        <td><%= menuItemList[i].itemQuantity %> </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table> 
+    <% } %>
+</body>
+</html>

@@ -38,6 +38,7 @@
                 <th>Order ID</th>
                 <th>Order Status</th>
                 <th>Total Amount</th>
+                <th>Create Time</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -48,9 +49,10 @@
                         <td><%= order._id %></td>
                         <td><%= order.orderStatus %></td>
                         <td><%= order.totalAmount %></td> 
+                        <td><%= order.createAt %></td>
                         <td>
-                            <form action="/customer/viewOrderDetail" method="post">
-                                <input type="hidden" name="orderID" value="<%= order.orderID %>">
+                            <form action="/customer/itemDetailsPage" method="post">
+                                <input type="hidden" name="orderID" value="<%= order._id %>">
                                 <button type="submit">View Detail</button>
                             </form>
                         </td>

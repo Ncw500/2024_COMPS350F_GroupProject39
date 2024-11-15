@@ -1,5 +1,6 @@
 const mongoose = require('mongoose'); // 引入 mongoose 模組，用來操作 MongoDB 資料庫
 const DatabaseHandler = require('./databaseHandler'); // 引入自定義的資料庫處理模組
+const { ObjectId } = mongoose.Types;
 
 
 class RestaurantModel { // 定義一個名為 UserModel 的類別
@@ -120,6 +121,13 @@ class RestaurantModel { // 定義一個名為 UserModel 的類別
                 "menuItems.$.itemName": itemPrice
             }
         }).catch(err => {
+            throw err;
+        });
+        return result;
+    }
+
+    async findMenuItemByRestaurantIDAndItemID(restaurantID, itemID) {
+        let result = await this.db.findOne(this.Restaurant, { _id: restaurantID, "menuItems._id": itemID  }).catch(err => {
             throw err;
         });
         return result;

@@ -8,11 +8,12 @@ class OrderModel {
         this.orderSchema = new mongoose.Schema({
             userID: { type: String, required: true },
             restaurantID: { type: mongoose.Schema.ObjectId, required: true },
-            menuItem: [{
+            menuItems: [{
                 type: {
                     _id: { type: mongoose.Schema.ObjectId, required: true },
-                    itemName: { type: String },
-                    itemPrice: { type: Number }
+                    itemName: { type: String, required: true },
+                    itemPrice: { type: Number, required: true },
+                    itemQuantity: { type: Number, required: true },
                 },
                 required: true
             }],

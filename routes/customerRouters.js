@@ -19,6 +19,8 @@ router.post('/payment', (req, res) => customerController.payment(req, res));
 
 router.get('/orderConfirmationPage', (req, res) => customerController.renderOrderConfirmationPage(req, res));
 
+router.post('/itemDetailsPage', (req, res) => customerController.renderItemDetailsPage(req, res));
+
 router.get('/orderHistoryPage', (req, res) => customerController.renderOrderHistoryPage(req, res));
 
 module.exports = router;
