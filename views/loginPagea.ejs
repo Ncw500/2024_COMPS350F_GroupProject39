@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- 指定文檔類型為HTML5 -->
+  <meta charset="UTF-8" />
+  <!-- 設置與IE瀏覽器的兼容性 -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- 設置視口以適應不同的設備螢幕大小 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="../public/image/logo.png" rel="shortcut icon" />
+  <!-- 設置頁面標題 -->
+  <title>Login Page</title>
+</head>
+
+<body>
+
+  <a href="/">
+    <h1>COMP S350F - Group Project 39 - Login Page</h1>
+  </a>
+  <form action="/user/login" method="POST" autocomplete="off" class="sign-in-form">
+
+    <% if (error) { %>
+      <p style="color: red;" class="error-message">
+        <%= error %>
+      </p>
+      <% } else if (success) { %>
+        <p style="color: green;" class="success-message">
+          <%= success %>
+        </p>
+        <% } %>
+
+          <div class="input-wrap">
+            <label>User ID</label>
+            <input type="text" id="userID" name="userID" minlength="4" class="input-field" autocomplete="off"
+              required />
+
+          </div>
+
+          <div class="input-wrap">
+            <label>Password</label>
+            <input type="password" id="password" name="userPassword" minlength="4" class="input-field"
+              autocomplete="off" required />
+
+          </div>
+
+
+          <input type="submit" value="Login" class="sign-btn" />
+          <a href="/user/forgotPassword" class="forgot-password">Forgot Password?</a><br />
+          <button onclick="window.location.href='/user/signupPage'">Sign up</button>
+  </form>
+
+
+</body>
+
+</html>

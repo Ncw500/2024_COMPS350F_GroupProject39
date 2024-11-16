@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recharge Crad Management</title>
+    <style>
+        table {
+            width: 100%;
+            margin: 0 auto; /* 表格居中 */
+            text-align: center; 
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px; /* 增加表格内边距，增强可读性 */
+            border: 1px solid #ddd; /* 表格边框样式 */
+        }
+        form {
+            display: inline;
+        }   
+    </style>
+</head>
+<body>
+    <a href="/"><h1>COMP S350F - Group Project 39 - Recharge Card Management Page</h1></a>
+    <% if (error) { %>
+        <p style="color: red;" class="error-message">
+            <%= error %>
+        </p>
+    <% } else if (success) { %>
+        <p style="color: green;" class="success-message">
+            <%= success %>
+        </p>
+    <% } %>
+    
+    <% if (Array.isArray(rechargeCardList) && rechargeCardList.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Card Code</th>
+                    <th>Value</th>
+                    <th>Status</th>
+                    <th>Referee ID</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% rechargeCardList.forEach(rechargeCard => { %>
+                    <tr>
+                        <td><%= rechargeCard.code %></td>
+                        <td><%= rechargeCard.value %></td>
+                        <td><%= rechargeCard.status %></td> 
+                        <td><%= rechargeCard.refereeID && rechargeCard.refereeID.length > 0 ? rechargeCard.refereeID : 'NULL' %></td>
+                        <td>
+                            <form action="/customer/rechargeCardManagement" method="post">
+                                <input type="hidden" name="cardID" value="<%= rechargeCard._id %>">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>No recharge card information found.</p> 
+    <% } %>
+    <form action="/admin/generateRechargeCardPage" method="get">
+        <button type="submit">Add Recharge Card</button>
+    </form>
+</body>
+</html>

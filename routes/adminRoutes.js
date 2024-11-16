@@ -12,4 +12,10 @@ router.post('/userManage', (req, res) => adminController.renderUserManage(req, r
 
 router.post('/deleteUser', (req, res) => adminController.deleteUser(req, res));
 
+router.get('/rechargeCardManagement', (req, res) => adminController.renderRechargeCardManagement(req, res));
+
+router.get('/generateRechargeCardPage', (req, res) => adminController.renderGenerateRechargeCardPage(req, res));
+
+router.post('/generateRechargeCard', (req, res) => adminController.generateRechargeCard(req, res));
+
 module.exports = router;

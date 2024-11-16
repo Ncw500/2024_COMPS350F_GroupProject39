@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redeem Recharge Card Page</title>
+</head>
+<body>
+    <a href="/"><h1>COMP S350F - Group Project 39 - Redeem Recharge Card Page</h1></a>
+    <% if (error) { %>
+        <p style="color: red;"><%= error %></p>
+    <% } %>
+    <% if (success) { %>
+        <p style="color: green;"><%= success %></p>
+    <% } %>
+    <form action="/customer/redeemRechargeCard" method="POST">
+        <label for="rechargeCardCode">Recharge Card Code:</label>
+        <input type="text" id="rechargeCardCode" name="rechargeCardCode" required>
+        <br/>
+        <button type="submit">Redeem Recharge Card</button>
+    </form>
+</body>
+</html>

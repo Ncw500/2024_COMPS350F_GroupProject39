@@ -55,6 +55,10 @@
                                 <input type="hidden" name="orderID" value="<%= order._id %>">
                                 <button type="submit">View Detail</button>
                             </form>
+                            <form action="/customer/orderTrackingPage" method="post">
+                                <input type="hidden" name="orderID" value="<%= order._id %>">
+                                <button type="submit">Tracking</button>
+                            </form>
                         </td>
                     </tr>
                 <% }) %>

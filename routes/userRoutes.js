@@ -17,4 +17,8 @@ router.post('/signup', (req, res) => userController.signup(req, res));
 // 登出功能路由 (通過 index.ejs 中 button 調用)
 router.get('/logout', (req, res) => userController.logout(req, res));
 
+router.get('/profilePage', (req, res) => userController.renderProfilePage(req, res));
+
+router.post('/updateProfile', (req, res) => userController.updateProfile(req, res));
+
 module.exports = router;

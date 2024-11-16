@@ -23,4 +23,10 @@ router.post('/itemDetailsPage', (req, res) => customerController.renderItemDetai
 
 router.get('/orderHistoryPage', (req, res) => customerController.renderOrderHistoryPage(req, res));
 
+router.post('/orderTrackingPage', (req, res) => customerController.renderOrderTrackingPage(req, res));
+
+router.get('/redeemRechargeCardPage', (req, res) => customerController.renderRedeemRechargeCardPage(req, res));
+
+router.post('/redeemRechargeCard', (req, res) => customerController.redeemRechargeCard(req, res));
+
 module.exports = router;

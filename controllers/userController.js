@@ -3,11 +3,13 @@ const AccountBalanceModel = require('../models/accountBalanceModel');
 
 class UserController {
 
-    renderWithDefaults(res, view, options = {}) {
+    async renderWithDefaults(res, view, options = {}) {
         // 定义默认值
         const defaults = {
             error: undefined,
             success: undefined,
+            user: undefined,
+            accountBalance: undefined
         };
         // 合并默认值和传入的选项
         const renderOptions = { ...defaults, ...options };
@@ -59,7 +61,7 @@ class UserController {
             const result = await userModel.insertUser(userID, userPassword, userEmail, userRole);
             // create account balance for user
             const result2 = await accountBalanceModel.insertAccountBalance(userID);
-            
+
             this.renderWithDefaults(res, 'loginPage', { success: 'User account created successfully!' });
         } catch (err) {
             if (err.code === 11000) { // 重複鍵錯誤
@@ -71,6 +73,45 @@ class UserController {
             } else {
                 this.renderWithDefaults(res, 'signupPage', { error: 'An error occurred!' });
             }
+        }
+    }
+
+    async renderProfilePage(req, res, options = {}) {
+        let userID = req.session.user.userID;
+        const userModel = new UserModel();
+        const accountBalanceModel = new AccountBalanceModel();
+        let renderOptions = { ...options };
+
+        try {
+            const user = await userModel.findUserByUserID(userID);
+            const accountBalance = await accountBalanceModel.getAccountBalance(userID);
+            return await this.renderWithDefaults(res, 'profilePage', { user, accountBalance, ...renderOptions });
+
+        } catch (err) {
+            return await this.renderWithDefaults(res, 'profilePage', { error: 'An error occurred!', ...renderOptions });
+        }
+    }
+
+    async updateProfile(req, res) {
+        
+        let user = {
+            "personalInfo.firstName": req.body.firstName,
+            "personalInfo.lastName": req.body.lastName,
+            "personalInfo.phone": req.body.phoneNumber,
+            "personalInfo.address": req.body.address,
+            "personalInfo.region": req.body.region,
+            "personalInfo.country": req.body.country,
+            "personalInfo.aboutMe": req.body.aboutMe
+        };
+        let userID = req.session.user.userID;
+
+        const userModel = new UserModel();
+
+        try {
+            const result = await userModel.updateUserByUserID(userID, user);
+            return await this.renderProfilePage(req, res, { success: 'Profile updated successfully!' });
+        } catch (err) {
+            return await this.renderProfilePage(req, res, { error: 'An error occurred!' });
         }
     }
 

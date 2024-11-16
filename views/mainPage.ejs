@@ -12,17 +12,19 @@
     <% if (user) { %>
         <p>Hello, <%= user.userID %>! You are a <%= user.userRole %>.</p>
         <button onclick="window.location.href='/user/logout'">Logout</button>
-
+        <button onclick="window.location.href='/user/profilePage'">Profile Page</button>
         <% if (user.userRole === 'customer') { %>
             <button onclick="window.location.href='/customer/menuPage'">Menu Page</button>
             <button onclick="window.location.href='/customer/cartPage'">Cart Page</button>
             <button onclick="window.location.href='/customer/orderConfirmationPage'">Order Confirm Page</button>
             <button onclick="window.location.href='/customer/orderHistoryPage'">Order History Page</button>
+            <button onclick="window.location.href='/customer/redeemRechargeCardPage'">Redeem Recharge Card Page</button>
         <% } else if (user.userRole === 'restaurant') { %>
             <button onclick="window.location.href='/restaurant/registerRestaurant'">Register Restaurant</button>
             <button onclick="window.location.href='/restaurant/insertMenu'">Insert Menu</button>
         <% } else if (user.userRole === 'admin') { %>
             <button onclick="window.location.href='/admin/userManage'">User Manage</button>
+            <button onclick="window.location.href='/admin/rechargeCardManagement'">Recharge Card Manage</button>
         <% } %>
 
     <% } else { %>

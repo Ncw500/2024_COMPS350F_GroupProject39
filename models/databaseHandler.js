@@ -9,22 +9,20 @@ class DatabaseHandler {
     }
 
     async connect() {
+        if (this.isConnected) return; // 如果已经连接，直接返回
         try {
             await mongoose.connect(this.dbUrl);
             this.isConnected = true;
-            // console.log(debugLogheader("Databasehandler.connect()") + `Connected successfully to MongoDB database: ${this.dbUrl}`);
         } catch (err) {
-            // console.error(debugLogheader("Databasehandler.connect()") + 'Database connection error:', err);
+            console.log(err);
             process.exit(1); // 连接失败时退出应用
         }
     }
-
-
+    
     async disconnect() {
         if (this.isConnected) {
             await mongoose.connection.close();
-            this.isConnect = false;
-            // console.log(debugLogheader("Databasehandler.disconnect()") + 'Database connection closed');
+            this.isConnected = false;
         }
     }
 
@@ -80,7 +78,7 @@ class DatabaseHandler {
             // console.log(debugLogheader("Databasehandler.insertOne()") + 'Data inserted successfully:', result);
             return result;
         } catch (err) {
-            // console.error(debugLogheader("Databasehandler.insertOne()") + 'Insert data error:', err);
+            // console.error(debugLogheader("Databasehandler.insertOne()") + 'Insert data error:', err)
             throw err;
         } finally {
             await this.disconnect();

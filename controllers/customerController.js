@@ -2,6 +2,8 @@
 const RestaurantModel = require('../models/restaurantModel');
 const OrderModel = require('../models/orderModel');
 const AccountBalanceModel = require('../models/accountBalanceModel');
+const OrderTrackingModel = require('../models/orderTrackingModel');
+const RechargeCardModel = require('../models/rechargeCardModel');
 
 class AdminController {
     async renderWithDefaults(req, res, view, options = {}) {
@@ -18,6 +20,7 @@ class AdminController {
             orders: [],
             accountBalance: 0,
             menuItemList: [],
+            orderTracking: [],
         };
 
         const renderOptions = { ...defaults, ...options };
@@ -123,6 +126,9 @@ class AdminController {
     }
 
     async payment(req, res) {
+
+        const orderModel = new OrderModel();
+
         let cart = req.session.cart;
         let itemTotalPrice = 0;
 
@@ -153,7 +159,7 @@ class AdminController {
         }
         if (paymentResult === true) {
             // create order on mongodb
-            const orderModel = new OrderModel();
+
             const order = {
                 userID: req.session.user.userID,
                 restaurantID: cart[0].restaurantID,
@@ -185,7 +191,21 @@ class AdminController {
             req.session.cart = [];
 
             try {
-                await orderModel.createOrder(order); // 尝试创建订单
+                let result = await orderModel.createOrder(order); // 尝试创建订单
+
+                const orderTrackingModel = new OrderTrackingModel();
+                let orderTracking = {
+                    orderID: result.id,
+                    customerID: req.session.user.userID,
+                    orderStatus: {
+                        status: result.orderStatus,
+                        updateTime: result.createAt,
+                    },
+                };
+                await orderTrackingModel.createOrderTracking(orderTracking);
+
+
+
                 await this.renderCartPage(req, res, { success: `Order created, total price: ${itemTotalPrice}` });
             } catch (err) {
                 await this.renderCartPage(req, res, { error: 'An error occurred while creating order' });
@@ -274,6 +294,41 @@ class AdminController {
         await this.renderWithDefaults(req, res, 'orderHistoryPage', renderOptions);
     }
 
+    async renderOrderTrackingPage(req, res, options = {}) {
+        let orderID = req.body.orderID;
+
+        const orderTrackingModel = new OrderTrackingModel();
+        let orderTracking = await orderTrackingModel.getOrderTaccking(orderID);
+        orderTracking = orderTracking[0];
+        const renderOptions = { orderTracking, ...options };
+
+        await this.renderWithDefaults(req, res, 'orderTrackingPage', renderOptions);
+    }
+
+    async renderRedeemRechargeCardPage(req, res, options = {}) {
+        await this.renderWithDefaults(req, res, 'redeemRechargeCardPage', options);
+    }
+
+
+    async redeemRechargeCard(req, res) {
+        let { rechargeCardCode } = req.body;
+
+        try {
+            const rechargeCardModel = new RechargeCardModel();
+            let result = await rechargeCardModel.getRechargeCardByCode(rechargeCardCode);
+
+            if (result && result.status === 'unused') {
+                await rechargeCardModel.updateRechargeCardStatus(result._id, 'Redeemed', req.session.user.userID);
+                const accountBalanceModel = new AccountBalanceModel();
+                await accountBalanceModel.updateAccountBalance(req.session.user.userID, result.value);
+                await this.renderRedeemRechargeCardPage(req, res, { success: `Recharge card redeemed successfully, your current balance is \$${result.value}` });
+            } else {
+                await this.renderRedeemRechargeCardPage(req, res, { error: 'Invalid recharge card number' });
+            }
+        } catch (err) {
+            await this.renderRedeemRechargeCardPage(req, res, { error: 'An error occurred while redeeming recharge card' });
+        }
+    }
 
 }
 

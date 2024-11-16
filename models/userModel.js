@@ -12,9 +12,13 @@ class UserModel { // 定義一個名為 UserModel 的類別
             userRole: { type: String, required: true },
             personalInfo: {
                 type: {
-                    name: { type: String }, // 直接定义字段，而不是嵌套在 type 中
+                    firstName: { type: String }, // 直接定义字段，而不是嵌套在 type 中
+                    lastName: { type: String },
                     phone: { type: String },
-                    address: { type: String }
+                    address: { type: String },
+                    region: { type: String },
+                    country: { type: String },
+                    aboutMe: { type: String }
                 },
                 default: {} // 默认为空对象
             },
@@ -73,6 +77,13 @@ class UserModel { // 定義一個名為 UserModel 的類別
         }
         return { isSuccess: false, user: result };
     }   
+
+    async updateUserByUserID(userID, updateData) {
+        let result = await this.db.update(this.User, { userID: userID }, "set", updateData).catch(err => {
+            throw err;
+        });
+        return result;
+    }
 
 
 }

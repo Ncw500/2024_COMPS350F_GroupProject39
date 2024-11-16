@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Recharge Card Page</title>
+</head>
+<body>
+    <a href="/"><h1>COMP S350F - Group Project 39 - Generate Recharge Card Page</h1></a>
+    <% if (error) { %>
+        <p style="color: red;" class="error-message">
+            <%= error %>
+        </p>
+    <% } else if (success) { %>
+        <p style="color: green;" class="success-message">
+            <%= success %>
+        </p>
+    <% } %>
+    <form action="/admin/generateRechargeCard" method="post">
+        <label for="cardValue">Card Value:</label>
+        <input type="number" name="cardValue" placeholder="Enter the value of the recharge card" required>
+        <input type="submit" value="Generate Recharge Card">
+    </form>
+</body>
+</html>
+
