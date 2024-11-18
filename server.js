@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 app.use(session({ // 設置會話規則
     name: 'session',
     secret: 'COMPS350F_GROUPPROJECT39',
-    keys: ['key1', 'key2'],
+    keys: ['key1', 'key2', 'key3'],
     resave: false,
     saveUninitialized: true
 }));

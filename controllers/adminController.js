@@ -77,9 +77,9 @@ class AdminController {
         };
         try {
             await rechargeCardModel.createRechargeCard(rechargeCard);
-            return await renderRechargeCardManagement(req, res, { success: 'Recharge card generated successfully!' });
+            return await this.renderRechargeCardManagement(req, res, { success: 'Recharge card generated successfully!' });
         } catch (err) {
-            return await renderRechargeCardManagement(req, res, { error: 'An error occurred while generating the recharge card' });
+            return await this.renderRechargeCardManagement(req, res, { error: 'An error occurred while generating the recharge card' });
         
         }
     }

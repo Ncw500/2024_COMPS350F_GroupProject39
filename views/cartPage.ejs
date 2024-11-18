@@ -1,79 +1,432 @@
+<!--
+=========================================================
+* Argon Dashboard 3 - v2.1.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart Page</title>
-    <style>
-        table {
-            width: 100%;
-            margin: 0 auto; /* 表格居中 */
-            text-align: center; 
-            border-collapse: collapse;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="../public/assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../public/assets/img/favicon.png">
+  <title>
+    Cart Page
+  </title>
+  <!--     Fonts and icons     -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <!-- Nucleo Icons -->
+  <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- CSS Files -->
+  <link id="pagestyle" href="../public/assets/css/argon-dashboard.css?v=2.1.0" rel="stylesheet" />
+  <script>
+    const cart = <%- JSON.stringify(cart) %>;
+    const accountBalance = <%- JSON.stringify(accountBalance) %>;
+    const itemTotalPrice = <%- JSON.stringify(itemTotalPrice) %>;
+
+
+    function disabledCheckout() {
+      let totalPrice = parseInt(document.getElementById('totalPrice').textContent);
+      let accountBalance = parseInt(document.getElementById('accountBalance').textContent);
+      if (totalPrice > accountBalance) {
+        document.getElementById('checkoutButton').disabled = true;
+      } else {
+        document.getElementById('checkoutButton').disabled = false;
+      }
+    }
+    
+    function updateSubtotal(itemID) {
+      // 获取当前价格和数量
+      let price = parseFloat(document.getElementById('price-' + itemID).textContent.slice(1));
+      let quantity = parseInt(document.getElementById('quantity-' + itemID).value);
+      cart.forEach(item => {
+        if (item.itemID === itemID) {
+          item.itemQuantity = quantity;
+          document.getElementById('hiddenQuantity-' + itemID).value = quantity;
         }
-        th, td {
-            padding: 10px; /* 增加表格内边距，增强可读性 */
-            border: 1px solid #ddd; /* 表格边框样式 */
-        }
-        form {
-            display: inline;
-        }
-    </style>
+      });
+      let subtotal = price * quantity;
+
+      // 更新该项的小计
+      document.getElementById('subtotal-' + itemID).textContent = `${subtotal}`;
+
+      // 更新总价格
+      updateTotalPrice(itemID);
+    }
+
+    function updateTotalPrice(itemID) {
+      let totalPrice = 0;
+      
+      const items = cart;
+
+      // 获取每个菜单项的价格和数量
+      items.forEach(item => {
+        console.log(item);
+        const quantity = parseInt(document.getElementById('quantity-' + item.itemID).value);
+        const subtotal = item.itemPrice * quantity;
+
+        // 累加总价格
+        totalPrice += subtotal;
+
+      });
+
+      // 更新总价格显示
+      document.getElementById('totalPrice').textContent = `${totalPrice.toFixed(0)}`;
+      let balanceRemaining = parseInt(document.getElementById('accountBalance').textContent) - totalPrice;
+      document.getElementById('balanceRemaining').textContent = `${balanceRemaining}`;
+      disabledCheckout();
+    }
+    
+
+    function disableEnterKey(event) {
+      // 检查按下的键是否为 Enter 键 (key code 13)
+      if (event.key === 'Enter') {
+        event.preventDefault(); // 阻止默认行为
+        return false; // 返回 false
+      }
+    }
+  </script>
 </head>
 
-<body>
-    <a href="/"><h1>COMP S350F - Group Project 39 - Cart Page</h1></a>
-    <% if (error) { %>
-        <p style="color: red;" class="error-message">
-            <%= error %>
-        </p>
-    <% } else if (success) { %>
-        <p style="color: green;" class="success-message">
-            <%= success %>
-        </p>
-    <% } %>
-    <h2>Your cart:</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Item Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% if (Array.isArray(cart) && cart.length > 0) { %>
-                <% cart.forEach(item => { %>
+<body class="g-sidenav-show   bg-gray-100">
+  <div class="position-absolute w-100 min-height-300 top-0 "
+    style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/profile-layout-header.jpg'); background-position-y: 50%; ">
+    <span class="mask bg-primary opacity-6"></span>
+  </div>
+  <aside
+    class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 "
+    id="sidenav-main">
+    <div class="sidenav-header">
+      <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+        aria-hidden="true" id="iconSidenav"></i>
+      <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html "
+        target="_blank">
+        <img src="../public/assets/img/logo-ct-dark.png" width="26px" height="26px" class="navbar-brand-img h-100"
+          alt="main_logo">
+        <span class="ms-1 font-weight-bold">Food Delivery</span>
+      </a>
+    </div>
+    <hr class="horizontal dark mt-0">
+    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link " href="/">
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-tv-2 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/customer/menuPage">
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-calendar-grid-58 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Menus</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active " href="/customer/cartPage">
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-credit-card text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">My Cart</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="../pages/virtual-reality.html">
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-app text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Virtual Reality</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="../pages/rtl.html">
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-world-2 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">RTL</span>
+          </a>
+        </li>
+        <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/profilePage">
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Profile</span>
+          </a>
+        </li>
+
+      </ul>
+    </div>
+    <div class="sidenav-footer mx-3 ">
+      <div class="card card-plain shadow-none" id="sidenavCard">
+        <img class="w-50 mx-auto" src="../public/assets/img/illustrations/icon-documentation.svg"
+          alt="sidebar_illustration">
+        <div class="card-body text-center p-3 w-100 pt-0">
+          <div class="docs-info">
+            <h6 class="mb-0">Need help?</h6>
+            <p class="text-xs font-weight-bold mb-0">Please check our docs</p>
+          </div>
+        </div>
+      </div>
+      <a href="https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard" target="_blank"
+        class="btn btn-dark btn-sm w-100 mb-3">Documentation</a>
+      <a class="btn btn-primary btn-sm mb-0 w-100" href="/user/logout" type="button">Logout</a>
+    </div>
+  </aside>
+  <main class="main-content position-relative border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur"
+      data-scroll="false">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb" style="margin-top: 18px;">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="/">Pages</a></li>
+            <li class="breadcrumb-item text-sm text-white active" aria-current="page">Cart</li>
+          </ol>
+          <h6 class="font-weight-bolder text-white mb-0">Cart</h6>
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar" style="justify-content: right;">
+          <ul class="navbar-nav  justify-content-end">
+            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line bg-white"></i>
+                  <i class="sidenav-toggler-line bg-white"></i>
+                  <i class="sidenav-toggler-line bg-white"></i>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4" style="margin-top: 150px;">
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0">
+              <h6>
+                My Cart
+              </h6>
+                <% if (error) { %>
+                  <div class="text-sm mx-auto">
+                  <p style="color: red;" class="error-message">
+                    <%= error %>
+                  </p>
+                </div>
+                  <% } else if (success) { %>
+                  <div class="text-sm mx-auto">
+
+                    <p style="color: green;" class="success-message">
+                      <%= success %>
+                    </p>
+                  </div>
+                    <% } %>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
                     <tr>
-                        <td><%= item.itemName %></td>
-                        <td><%= item.itemPrice %></td> 
-                        <td><%= item.itemQuantity %></td>
-                        <td><%= (item.itemPrice * item.itemQuantity) %></td>
-                        <td>
-                            <form action="/customer/removeFromCart" method="post">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <input type="hidden" name="itemID" value="<%= item.itemID %>">
-                                <button type="submit">Remove</button>
-                            </form>
-                        </td>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Menu Name</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Price
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sub Total
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Quantity
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Action
+                      </th>
                     </tr>
-                <% }); %>
-                <tr>
-                    <td colspan="4"><strong>Total:</strong></td>
-                    <td><strong><%= itemTotalPrice %></strong></td> <!-- 显示总计并保留两位小数 -->
-                </tr>
-            <% } else { %>
-                <tr>
-                    <td colspan="5">No items found!</td>
-                </tr>
-            <% } %>
-        </tbody>
-    </table><br/>
-    <form action="/customer/checkoutPage" method="post">
-        <button type="submit">Checkout</button>
-    </form>
+                  </thead>
+                  <tbody>
+                    <% if (Array.isArray(cart) && cart.length> 0) { %>
+                      <% cart.forEach(item=> { %>
+                        <tr>
+                          <td style="width: 300px;">
+                            <div class="d-flex px-3 py-1">
+                              <div>
+                                <img src="../<%= item.itemPicture %>" class="avatar avatar-sm me-3" alt="user1">
+                              </div>
+                              <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 px-2 text-sm">
+                                  <%= item.itemName %>
+                                </h6>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="align-middle text-sm">
+                            <span class="text-secondary text-xs font-weight-bold">$</span>
+                            <span class="text-secondary text-xs font-weight-bold" id="price-<%= item.itemID %>">
+                              <%= item.itemPrice %>
+                            </span>
+                          </td>
+                          <td class="align-middle ">
+                            <span class="text-secondary text-xs font-weight-bold">$</span>
+                            <span class="text-secondary text-xs font-weight-bold" id="subtotal-<%= item.itemID %>">
+                              <%= (item.itemPrice * item.itemQuantity) %>
+                            </span>
+
+                          </td>
+
+                          <td>
+                            <form action="/customer/removeFromCart" method="POST">
+                              <input class="form-control" type="number" name="itemQuantity"
+                                value="<%= item.itemQuantity %>" min="1" max="99" style="width: auto;"
+                                oninput="updateSubtotal('<%= item.itemID %>')" 
+                                onkeydown="return disableEnterKey(event)" id="quantity-<%= item.itemID %>">
+                              <input type="hidden" id="cart" value="<%= cart %>">
+                          </td>
+                          <td class="align-middle">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="itemID" value="<%= item.itemID %>">
+                            <button type="submit" class="text-secondary font-weight-bold text-xs"
+                              style="border: hidden; background-color: white; padding: 0;">Delete</button>
+                            </form>
+                          </td>
+
+                        </tr>
+                        <% }); %>
+                          <% } else { %>
+                            <tr>
+                              <td colspan="5" style="text-align: center; padding-top: 20px; padding-bottom: 20px;"><span
+                                  class="text-secondary text-xs font-weight-bold ">No items found ... You can add an
+                                  item on Menu Page!</span></td>
+                            </tr>
+                            <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card h-100">
+            <div class="card-header pb-0 p-3">
+              <div class="row">
+                <div class="col-6 d-flex align-items-center">
+                  <h6 class="mb-0">Go To Checkout</h6>
+                </div>
+                <div class="col-6 text-end">
+                  <form action="/customer/checkoutPage" method="post">
+                    <% cart.forEach(item=> { %>
+                      <input type="hidden" name="itemID" value="<%= item.itemID %>">
+                      <input type="hidden" name="itemName" value="<%= item.itemName %>">
+                      <input type="hidden" name="itemPrice" value="<%= item.itemPrice %>">
+                      <input type="hidden" name="itemQuantity" value="<%= item.itemQuantity %>" id="hiddenQuantity-<%= item.itemID %>">
+                    <% }); %>
+                    <button type="submit" class="btn btn-outline-primary btn-sm mb-0" id="checkoutButton">Checkout</button>
+                    <button type="button" class="btn btn-outline-primary btn-sm mb-0" onclick="window.location.href='/customer/redeemRechargeCardPage'">Recharge Card</button>
+                    <button type="button" onclick="window.location.href='/admin/rechargeCardManagement'">Recharge Card Manage (Only for test use)</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-3 pb-0">
+              <ul class="list-group ">
+                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                  <div class="d-flex flex-column">
+                    <h6 class="mb-1 text-dark font-weight-bold text-sm">Account Balance</h6>
+                  </div>
+                  <div class="d-flex align-items-center text-sm text-success">
+                    <span>$&nbsp;</span><span id="accountBalance">
+                      <%= accountBalance.balance %>
+                    </span>
+                    <sapn>&nbsp;(HKD)</sapn>
+                  </div>
+                </li>
+                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                  <div class="d-flex flex-column">
+                    <h6 class="mb-1 text-dark font-weight-bold text-sm ">Total Price</h6>
+                    <input type="hidden" name="OriginalTotalPrice" id="OriginalTotalPrice"
+                      value="<%= itemTotalPrice %>">
+                  </div>
+                  <div class="d-flex align-items-center text-sm text-danger">
+                    <span>$&nbsp;</span><span id="totalPrice">
+                      <%= itemTotalPrice %>
+                    </span>
+                    <sapn>&nbsp;(HKD)</sapn>
+                  </div>
+                </li>
+
+                <hr>
+                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                  <div class="d-flex flex-column">
+                    <h6 class="mb-1 text-dark font-weight-bold text-sm">Balance Remaining</h6>
+                  </div>
+                  <div class="d-flex align-items-center text-sm text-primary">
+                    <span>$&nbsp;</span><span id="balanceRemaining">
+                      <%= accountBalance.balance - itemTotalPrice %>
+                    </span>
+                    <sapn>&nbsp;(HKD)</sapn>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+
+  </main>
+
+  <!--   Core JS Files   -->
+  <script src="../public/assets/js/core/popper.min.js"></script>
+  <script src="../public/assets/js/core/bootstrap.min.js"></script>
+  <script src="../public/assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../public/assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="../public/assets/js/argon-dashboard.min.js?v=2.1.0"></script>
+  <script>
+       window.onload = function () {
+      updateTotalPrice();
+      disabledCheckout();
+    }
+  </script>
 </body>
+
 </html>

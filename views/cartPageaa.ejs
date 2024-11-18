@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Page</title>
+    <style>
+        table {
+            width: 100%;
+            margin: 0 auto; /* 表格居中 */
+            text-align: center; 
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px; /* 增加表格内边距，增强可读性 */
+            border: 1px solid #ddd; /* 表格边框样式 */
+        }
+        form {
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="/"><h1>COMP S350F - Group Project 39 - Cart Page</h1></a>
+    <% if (error) { %>
+        <p style="color: red;" class="error-message">
+            <%= error %>
+        </p>
+    <% } else if (success) { %>
+        <p style="color: green;" class="success-message">
+            <%= success %>
+        </p>
+    <% } %>
+    <h2>Your cart:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (Array.isArray(cart) && cart.length > 0) { %>
+                <% cart.forEach(item => { %>
+                    <tr>
+                        <td><%= item.itemName %></td>
+                        <td><%= item.itemPrice %></td> 
+                        <td><%= item.itemQuantity %></td>
+                        <td><%= (item.itemPrice * item.itemQuantity) %></td>
+                        <td>
+                            <form action="/customer/removeFromCart" method="post">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="hidden" name="itemID" value="<%= item.itemID %>">
+                                <button type="submit">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+                <tr>
+                    <td colspan="4"><strong>Total:</strong></td>
+                    <td><strong><%= itemTotalPrice %></strong></td> <!-- 显示总计并保留两位小数 -->
+                </tr>
+            <% } else { %>
+                <tr>
+                    <td colspan="5">No items found!</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table><br/>
+    <form action="/customer/checkoutPage" method="post">
+        <button type="submit">Checkout</button>
+    </form>
+</body>
+</html>

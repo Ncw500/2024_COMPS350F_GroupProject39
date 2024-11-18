@@ -57,9 +57,18 @@ class DatabaseHandler {
 
     // 查找多个数据
     async findAll(mongooseModel) {
+        const categoryOrder = {
+            "Main Course": 1,
+            "Appetizer": 2,
+            "Dessert": 3,
+            "Beverage": 4
+        };
+        
+
         try {
             await this.connect();
-            const result = await mongooseModel.find({});
+            const result = await mongooseModel.find().sort({ itemCategory: 1, itemName: 1 });
+            
             // console.log(debugLogheader("Databasehandler.findAll()") + 'Data found:', result);
             return result;
         } catch (err) {

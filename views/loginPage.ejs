@@ -21,7 +21,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="../public/assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../public/assets/img/favicon.png">
   <title>
-    Argon Dashboard 3 by Creative Tim
+    Login Page
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -111,11 +111,11 @@
 
                   <form action="/user/login" method="POST" autocomplete="off" class="sign-in-form">
                     <div class="mb-3">
-                      <input type="text" class="form-control form-control-lg" placeholder="User ID" aria-label="Email" name="userID" required>
+                      <input type="text" class="form-control form-control-lg" placeholder="User ID" aria-label="Email" name="userID" required maxlength="30">
                     </div>
                     <div class="mb-3">
                       <input type="password" class="form-control form-control-lg" placeholder="Password"
-                        aria-label="Password" name="userPassword" required>
+                        aria-label="Password" name="userPassword" required maxlength="30">
                     </div>
                     <div class="text-center">
                       <input type="submit" value="Login" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">

@@ -1,5 +1,6 @@
 const UserModel = require('../models/userModel');
 const AccountBalanceModel = require('../models/accountBalanceModel');
+const stringValidator = require('../lib/stringValidator');
 
 class UserController {
 
@@ -23,7 +24,17 @@ class UserController {
 
     // 登入功能
     async login(req, res) {
-        const { userID, userPassword } = req.body;
+        let { userID, userPassword } = req.body;
+
+        userID = userID.trim();
+        userPassword = userPassword.trim();
+
+        // validate user ID and password
+        if (stringValidator.containsChineseCharacters(userID) || stringValidator.containsChineseCharacters(userPassword)) {
+            return this.renderWithDefaults(res, 'loginPage', { error: 'Cannot contain Chinese characters!' });
+        }
+        
+        
         const userModel = new UserModel();
         try {
             const result = await userModel.authenticate(userID, userPassword);
@@ -54,6 +65,14 @@ class UserController {
 
     async signup(req, res) {
         const { userID, userPassword, userEmail, userRole } = req.body;
+
+        // Validate user ID, password, and email
+        if (stringValidator.containsChineseCharacters(userID) || stringValidator.containsChineseCharacters(userPassword) || stringValidator.containsChineseCharacters(userEmail)) {
+            return this.renderWithDefaults(res, 'signupPage', { error: 'Cannot contain Chinese characters!' });
+        }
+
+
+
         const userModel = new UserModel();
         const accountBalanceModel = new AccountBalanceModel();
 

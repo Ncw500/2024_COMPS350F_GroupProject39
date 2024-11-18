@@ -18,14 +18,18 @@ class OrderModel {
                 required: true
             }],
             orderStatus: { type: String, required: true },
+            payeeInfo: { type: {
+                firstName: { type: String, required: true },
+                lastName: { type: String, required: true },
+                phone: { type: String, required: true },
+            },
+            required: true
+            },
             deliveryAddress: { type: 
                 {
-                    room: { type: String, required: true },
-                    floor: { type: String, required: true },
-                    building: { type: String, required: true },
-                    street: { type: String, required: true },
-                    town: { type: String, required: true },
+                    address: { type: String, required: true },
                     region: { type: String, required: true },
+                    country: { type: String, required: true },
                 },
                 required: true
              },

@@ -1,92 +1,347 @@
+<!--
+=========================================================
+* Argon Dashboard 3 - v2.1.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout Page</title>
-    <style>
-        table {
-            width: 100%;
-            margin: 0 auto; /* 表格居中 */
-            text-align: center; 
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px; /* 增加表格内边距，增强可读性 */
-            border: 1px solid #ddd; /* 表格边框样式 */
-        }
-        form {
-            display: inline;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="../public/assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../public/assets/img/favicon.png">
+  <title>
+    Checkout Page
+  </title>
+  <!--     Fonts and icons     -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <!-- Nucleo Icons -->
+  <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- CSS Files -->
+  <link id="pagestyle" href="../public/assets/css/argon-dashboard.css?v=2.1.0" rel="stylesheet" />
 </head>
-<body>
-    <a href="/"><h1>COMP S350F - Group Project 39 - Checkout Page</h1></a>
-    <% if (error) { %>
-        <p style="color: red;" class="error-message">
-            <%= error %>
-        </p>
-    <% } else if (success) { %>
-        <p style="color: green;" class="success-message">
-            <%= success %>
-        </p>
-    <% } %>
-    <h2>Your cart:</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Item Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% if (Array.isArray(cart) && cart.length > 0) { %>
-                <% cart.forEach(item => { %>
-                    <tr>
-                        <td><%= item.itemName %></td>
-                        <td><%= item.itemPrice %></td> 
-                        <td><%= item.itemQuantity %></td>
-                        <td><%= (item.itemPrice * item.itemQuantity) %></td>
-                    </tr>
-                <% }); %>
-                <tr>
-                    <td colspan="3"><strong>Total:</strong></td>
-                    <td><strong><%= itemTotalPrice %></strong></td> <!-- 显示总计并保留两位小数 -->
-                </tr>
-            <% } else { %>
-                <tr>
-                    <td colspan="4">No items found!</td>
-                </tr>
-            <% } %>
-        </tbody>
-    </table><br/>
-    Your shipping address: <br/><br/>
-    <form action="/customer/paymentPage" method="post">
-        <label for="room">Room:</label><br/>
-        <input type="text" name="room" id="room" required><br/><br/>
-        <label for="floor">Floor:</label><br/>
-        <input type="text" name="floor" id="floor" required><br/><br/>
-        <label for="building">Building:</label><br/>
-        <input type="text" name="building" id="building" required><br/><br/>
-        <label for="street">Street:</label><br/>
-        <input type="text" name="street" id="state" required><br/><br/>
-        <label for="town">Town:</label><br/>
-        <input type="text" name="town" id="town" required><br/><br/>
-        <label for="region">Region:</label><br/>
-        <select name="region" id="region">
-            <option value="Hong Kong">Hong Kong</option>
-            <option value="Kowloon">Kowloon</option>
-            <option value="New Territories">New Territories</option>
-        </select><br/><br/>
-        <label for="deliveryMethod">Delivery Method:</label><br/>
-        <select name="deliveryMethod" id="deliveryMethod">
-            <option value="Pickup">Pickup</option>
-            <option value="Delivery">Delivery</option>
-        </select><br/><br/>
-        <button type="submit">Go to Payment Page</button>
-    </form>
-    
+
+<body class="g-sidenav-show   bg-gray-100">
+  <div class="position-absolute w-100 min-height-300 top-0"
+    style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/profile-layout-header.jpg'); background-position-y: 50%;">
+    <span class="mask bg-primary opacity-6"></span>
+  </div>
+  <aside
+    class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 "
+    id="sidenav-main">
+    <div class="sidenav-header">
+      <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+        aria-hidden="true" id="iconSidenav"></i>
+      <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html "
+        target="_blank">
+        <img src="../public/assets/img/logo-ct-dark.png" width="26px" height="26px" class="navbar-brand-img h-100"
+          alt="main_logo">
+        <span class="ms-1 font-weight-bold">Food Delivery</span>
+      </a>
+    </div>
+    <hr class="horizontal dark mt-0">
+    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link " href="/">
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-tv-2 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/customer/menuPage">
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-calendar-grid-58 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Menus</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active " href="/customer/cartPage">
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-credit-card text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">My Cart</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="../pages/virtual-reality.html">
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-app text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Virtual Reality</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="../pages/rtl.html">
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-world-2 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">RTL</span>
+          </a>
+        </li>
+        <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/profilePage">
+            <div
+              class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Profile</span>
+          </a>
+        </li>
+
+      </ul>
+    </div>
+    <div class="sidenav-footer mx-3 ">
+      <div class="card card-plain shadow-none" id="sidenavCard">
+        <img class="w-50 mx-auto" src="../public/assets/img/illustrations/icon-documentation.svg"
+          alt="sidebar_illustration">
+        <div class="card-body text-center p-3 w-100 pt-0">
+          <div class="docs-info">
+            <h6 class="mb-0">Need help?</h6>
+            <p class="text-xs font-weight-bold mb-0">Please check our docs</p>
+          </div>
+        </div>
+      </div>
+      <a href="https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard" target="_blank"
+        class="btn btn-dark btn-sm w-100 mb-3">Documentation</a>
+      <a class="btn btn-primary btn-sm mb-0 w-100" href="/user/logout" type="button">Logout</a>
+    </div>
+  </aside>
+  <main class="main-content position-relative border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur"
+      data-scroll="false">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb" style="margin-top: 18px;">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="/">Pages</a></li>
+            <li class="breadcrumb-item text-sm text-white active" aria-current="page"><a class="opacity-5 text-white" href="/customer/cartPage">Cart</a></li>
+            <li class="breadcrumb-item text-sm text-white active" aria-current="page">Checkout</li>
+          </ol>
+          <h6 class="font-weight-bolder text-white mb-0">Checkout</h6>
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar" style="justify-content: right;">
+          <ul class="navbar-nav  justify-content-end">
+            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line bg-white"></i>
+                  <i class="sidenav-toggler-line bg-white"></i>
+                  <i class="sidenav-toggler-line bg-white"></i>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4" style="margin-top: 150px;">
+      <div class="row" style="margin-bottom: 20px;">
+        <div class="col-xl-5 mb-xl-0 mb-4">
+          <div class="card bg-transparent shadow-xl">
+            <div class="overflow-hidden position-relative border-radius-xl"
+              style="height: 250px ;background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/card-visa.jpg');">
+              <span class="mask bg-gradient-dark"></span>
+              <div class="card-body position-relative z-index-1 p-3">
+                <i class="fas fa-wifi text-white p-2"></i>
+                <p class="text-white text-sm opacity-8 mb-0">Account Owner ID</p>
+                <h5 class="text-white mt-2 mb-5 pb-2">
+                  <%= user.userID %>
+                </h5>
+                <div class="d-flex">
+                  <div class="d-flex">
+                    <div class="me-4">
+                      <p class="text-white text-sm opacity-8 mb-0">Account Owner</p>
+                      <h6 class="text-white mb-0">
+                        <%= user.personalInfo.lastName %>&nbsp;<%= user.personalInfo.firstName %>
+                      </h6>
+                    </div>
+                    <div>
+                      <p class="text-white text-sm opacity-8 mb-0">Balance</p>
+                      <h6 class="text-white mb-0">$ <%= accountBalance.balance %>
+                      </h6>
+                    </div>
+                  </div>
+                  <div class="ms-auto w-20 d-flex align-items-end justify-content-end">
+                    <!-- <img class="w-60 mt-2" src="../assets/img/logos/mastercard.png" alt="logo"> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-7">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card" style="height: 250px;">
+                <div class="card-header mx-4 p-3 text-center">
+                  <div class="icon icon-shape icon-lg bg-gradient-primary shadow text-center border-radius-lg">
+                    <i class="fas fa-landmark opacity-10"></i>
+                  </div>
+                </div>
+                <div class="card-body pt-0 p-3 text-center">
+                  <h6 class="text-center mb-0">Credit Card</h6>
+                  <span class="text-xs">Master & Visa</span>
+                  <hr class="horizontal dark my-3">
+                  <button class="btn btn-outline-primary btn-sm w-100" disabled
+                    style="margin-bottom: 0; margin-top: 5px;">Add Card</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mt-md-0 mt-4">
+              <div class="card" style="height: 250px;">
+                <div class="card-header mx-4 p-3 text-center">
+                  <div class="icon icon-shape icon-lg bg-gradient-primary shadow text-center border-radius-lg">
+                    <i class="fab fa-paypal opacity-10"></i>
+                  </div>
+                </div>
+                <div class="card-body pt-0 p-3 text-center">
+                  <h6 class="text-center mb-0">Paypal</h6>
+                  <span class="text-xs">Freelance Payment</span>
+                  <hr class="horizontal dark my-3">
+                  <button class="btn btn-outline-primary btn-sm w-100" disabled
+                    style="margin-bottom: 0; margin-top: 5px;">Add Account</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <form action="/customer/payment" method="post">
+              <div class="card-header pb-0">
+                <input type="hidden" name="paymentMethod" value="balance">
+                <div class="d-flex align-items-center">
+                  <p class="mb-0">Personal Information</p>
+
+                  <button class="btn btn-primary btn-sm ms-auto" type="submit">Payment</button>
+                </div>
+              </div>
+              
+              <div class="card-body">
+
+                <p class="text-uppercase text-sm">Payee Information & Delivery Method</p>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label">First
+                        name</label>
+                      <input class="form-control" type="text" value="<%= user.personalInfo.firstName %>"
+                      name="payeeFirstName" required>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label">Last name</label>
+                      <input class="form-control" type="text" value="<%= user.personalInfo.lastName %>" name="payeeLastName" required>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label for="deliveryMethod" class="form-control-label">Delivery Method</label>
+                    <select class="form-control" name="deliveryMethod" id="deliveryMethod" required>
+                      <option value="Dining in">Dining in</option>
+                      <option value="Pickup">Pickup</option>
+                      <option value="Delivery">Delivery</option>
+                    </select>
+                  </div>
+                </div>
+                <hr class="horizontal dark">
+                <p class="text-uppercase text-sm">Contact Information</p>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label" name="address">Address</label>
+                      <input class="form-control" type="text" value="<%= user.personalInfo.address %>" name="address" required>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label" name="region">Region</label>
+                      <select class="form-control" name="region" required>
+                        <option value="Hong Kong Island" <%=user.personalInfo.region==='Hong Kong' ? 'selected' : '' %>
+                          >Hong Kong Island</option>
+                        <option value="Kowloon" <%=user.personalInfo.region==='Kowloon' ? 'selected' : '' %>>Kowloon
+                        </option>
+                        <option value="New Terriories" <%=user.personalInfo.region==='New Terriories' ? 'selected' : ''
+                          %>>New Territories</option>
+                      </select>
+
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label" name="country">Country</label>
+                      <select class="form-control" name="country" required>
+                        <option value="Hong Kong">Hong Kong</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label" >Phone Number</label>
+                      <input class="form-control" type="number" value="<%= user.personalInfo.phone %>" minlength="8"
+                        maxlength="8" name="phone" required>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!--   Core JS Files   -->
+  <script src="../public/assets/js/core/popper.min.js"></script>
+  <script src="../public/assets/js/core/bootstrap.min.js"></script>
+  <script src="../public/assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../public/assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="../public/assets/js/argon-dashboard.min.js?v=2.1.0"></script>
 </body>
+
 </html>

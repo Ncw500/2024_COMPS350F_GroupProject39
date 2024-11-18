@@ -21,7 +21,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="../public/assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../public/assets/img/favicon.png">
   <title>
-    Argon Dashboard 3 by Creative Tim
+    Browse All Restaurants
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -133,9 +133,9 @@
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur"
       data-scroll="false">
       <div class="container-fluid py-1 px-3">
-        <nav aria-label="breadcrumb">
+        <nav aria-label="breadcrumb" style="margin-top: 18px;">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Pages</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="/">Pages</a></li>
             <li class="breadcrumb-item text-sm text-white active" aria-current="page">Menus</li>
           </ol>
           <h6 class="font-weight-bolder text-white mb-0">Menus</h6>
@@ -156,7 +156,7 @@
       </div>
     </nav>
     <!-- End Navbar -->
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-4" style="margin-top: 85px;">
       <div class="row">
 
         <div class="ms-md-auto pe-md-3 d-flex align-items-center" style="margin-bottom: 25px;">
@@ -171,6 +171,7 @@
         </div>
 
       </div>
+  
       <% for (let i=0; i < restaurantsList.length; i++) { %>
         <div class="row">
           <div class="col-12">
@@ -179,17 +180,20 @@
                 <h6>
                   <%= restaurantsList[i].restaurantName %>
                 </h6>
-                <div class="mb-4 text-sm mx-auto">
-                  <% if (error) { %>
-                    <p style="color: red;" class="error-message">
-                      <%= error %>
-                    </p>
-                    <% } else if (success) { %>
-                      <p style="color: green;" class="success-message">
-                        <%= success %>
+                    <% if (error && updatedRestaurantID == restaurantsList[i]._id) { %>
+                      <div class="text-sm mx-auto">
+                      <p style="color: red;" class="error-message">
+                        <%= error %>
                       </p>
-                      <% } %>
                     </div>
+                      <% } else if (success && updatedRestaurantID == restaurantsList[i]._id) { %>
+                      <div class="text-sm mx-auto">
+    
+                        <p style="color: green;" class="success-message">
+                          <%= success %>
+                        </p>
+                      </div>
+                        <% } %>
               </div>
               <div class="card-body px-0 pt-0 pb-2">
                 <div class="table-responsive p-0">
@@ -240,7 +244,7 @@
                                 <span class="badge badge-sm bg-gradient-danger">
                                   <%= restaurantsList[i].menuItems[j].itemCategory %>
                                 </span>
-                                <% } else if (restaurantsList[i].menuItems[j].itemCategory==='Drinks' ) { %>
+                                <% } else if (restaurantsList[i].menuItems[j].itemCategory==='Beverage' ) { %>
                                   <span class="badge badge-sm bg-gradient-info">
                                     <%= restaurantsList[i].menuItems[j].itemCategory %>
                                   </span>
@@ -268,8 +272,9 @@
                                 value="<%= restaurantsList[i].menuItems[j].itemName %>">
                               <input type="hidden" name="itemPrice"
                                 value="<%= restaurantsList[i].menuItems[j].itemPrice %>">
+                                <input type="hidden" name="itemPicture" value="<%= restaurantsList[i].menuItems[j].itemPicture.path %>">
                               <button type="submit" class="text-secondary font-weight-bold text-xs"
-                                style="border: hidden; background-color: white; padding: 0;">Order</button>
+                                style="border: hidden; background-color: white; padding: 0;">Add to Cart</button>
                               </form>
                             </td>
                             <% } %>

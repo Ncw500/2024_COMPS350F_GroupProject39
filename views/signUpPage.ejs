@@ -21,7 +21,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="../public/assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../public/assets/img/favicon.png">
   <title>
-    Argon Dashboard 3 by Creative Tim
+    Sign Up Page
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -32,6 +32,11 @@
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <!-- CSS Files -->
   <link id="pagestyle" href="../public/assets/css/argon-dashboard.css?v=2.1.0" rel="stylesheet" />
+  <style>
+    .valid { color: green; }
+    .invalid { color: red; }
+    
+</style>
 </head>
 
 <body class="">
@@ -107,7 +112,7 @@
             </div>
             <div class="card-body">
               
-              <form action="/user/signup" method="POST" autocomplete="off" class="sign-up-form">
+              <form action="/user/signup" method="POST" autocomplete="off" class="sign-up-form" >
                 <div class="mb-3">
                   <input type="text" class="form-control" placeholder="User ID" aria-label="userID" name="userID" minlength="8" required>
                 </div>
@@ -115,7 +120,15 @@
                   <input type="email" class="form-control" placeholder="Email" aria-label="Email" name="userEmail" required>
                 </div>
                 <div class="mb-3">
-                  <input type="password" class="form-control" placeholder="Password" aria-label="Password" name="userPassword" minlength="8" required>
+                  <input type="password" class="form-control" placeholder="Password" aria-label="Password" name="userPassword" minlength="8" required id="password"  oninput="checkPassword()" title="The password must contain at least 8 characters, including at least one uppercase letter, one lowercase letter, one number, and one special character."  pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}">
+                  <div id="requirements"  >
+                    <p id="length" class="invalid" hidden>至少 8 个字符</p>
+                    <p id="uppercase" class="invalid" hidden>至少一个大写字母</p>
+                    <p id="lowercase" class="invalid" hidden>至少一个小写字母</p>
+                    <p id="number" class="invalid" hidden>至少一个数字</p>
+                    <p id="special" class="invalid" hidden>至少一个特殊字符 (如 @$!%*?&)</p>
+                </div>
+        
                 </div>
                 <div class="form-check form-check-info text-start">
                   <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" required>
@@ -201,6 +214,42 @@
       }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
+
+    function checkPassword() {
+            const password = document.getElementById('password').value;
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                special: /[@$!%*?&]/.test(password)
+            };
+
+            // 更新提示信息
+            document.getElementById('length').className = requirements.length ? 'valid' : 'invalid';
+            document.getElementById('uppercase').className = requirements.uppercase ? 'valid' : 'invalid';
+            document.getElementById('lowercase').className = requirements.lowercase ? 'valid' : 'invalid';
+            document.getElementById('number').className = requirements.number ? 'valid' : 'invalid';
+            document.getElementById('special').className = requirements.special ? 'valid' : 'invalid';
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const isValid = password.length >= 8 &&
+                /[A-Z]/.test(password) &&
+                /[a-z]/.test(password) &&
+                /\d/.test(password) &&
+                /[@$!%*?&]/.test(password);
+
+            if (!isValid) {
+                alert("Password does not meet the requirements, please check the prompt information.");
+                return false; // 阻止表单提交
+            }
+
+            return true; // 允许提交
+        }
+
+
   </script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
