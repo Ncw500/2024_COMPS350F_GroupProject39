@@ -40,7 +40,7 @@ Now that you have npm installed, you can run npm commands. Here are some common 
 ## 4. Running Project
 If you have scripts defined in your package.json, you can run them using:
 
-    npm run start
+    npm start
 
 ![serverRunning](/public/image/serverRunning.png)
 
